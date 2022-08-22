@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: zcloud
+  thymeleaf:
+    cache: false
+    check-template: true
+    check-template-location: true
+    content-type: text/html
+    enabled: true
+    encoding: UTF-8
+    excluded-view-names: ''
+    mode: HTML5
+    prefix: classpath:/templates/
+    suffix: .html
+
+
+  security:
+    user:
+      name: admin
+      password: admin
