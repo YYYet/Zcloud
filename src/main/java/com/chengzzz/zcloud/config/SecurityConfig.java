@@ -9,7 +9,7 @@ package com.chengzzz.zcloud.config;
 //public class SecurityConfig extends WebSecurityConfigurerAdapter {
 ////    @Override
 ////    public void configure(WebSecurity web) throws Exception {
-////        web.ignoring().antMatchers("/hello.html","/loginNew.html");
+////        web.ignoring().antMatchers("/files.html","/loginNew.html");
 ////    }
 ////
 ////    @Override

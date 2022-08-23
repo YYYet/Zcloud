@@ -7,6 +7,10 @@ import com.chengzzz.zcloud.exception.pathErrorException;
 import com.chengzzz.zcloud.utils.filesUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
+import org.springframework.context.annotation.Bean;
 
 import java.util.ArrayList;
 
@@ -14,17 +18,18 @@ import java.util.ArrayList;
 public class ZcloudApplication {
 
     public static void main(String[] args) {
-
-        try {
-            ArrayList<fileEntity> dirFromPath = filesUtil.getDirFromCurrentPath("D:\\videos");
-            dirFromPath.forEach(item-> System.out.println(item.toString()+"  "+item.getName() ));
-
-        }catch (pathErrorException e){
-            System.out.println(e);
-        }
-
-
         SpringApplication.run(ZcloudApplication.class, args);
+    }
+
+    /**
+     * Tomcat配置 路径传参
+     * @return
+     */
+    @Bean
+    public ConfigurableServletWebServerFactory webServerFactory() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        factory.addConnectorCustomizers(connector -> connector.setProperty("relaxedQueryChars", "|{}[]\\"));
+        return factory;
     }
 
 }
