@@ -1,5 +1,7 @@
 package com.chengzzz.zcloud.utils;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
 import com.chengzzz.zcloud.entity.fileEntity;
 import com.chengzzz.zcloud.exception.pathErrorException;
@@ -7,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,16 +32,13 @@ public class filesUtil {
      * @return
      * @throws pathErrorException
      */
-    public static ArrayList<fileEntity> getDirFromCurrentPath(String path) throws pathErrorException {
+    public static List<fileEntity> getDirFromCurrentPath(String path) throws pathErrorException {
         if (StringUtils.isEmpty(path)){
             throw new pathErrorException(PATH_ERROR);
         }
         File[] ls = FileUtil.ls(path);
-        ArrayList<fileEntity> fileEntities = new ArrayList<>();
-        for (File item : ls) {
-            fileEntities.add(file2FileEntity(item));
-        }
-        return fileEntities;
+        List<File> files = Arrays.asList(ls);
+        return file2FileEntity(files);
     }
 
     /**
@@ -96,7 +96,10 @@ public class filesUtil {
         fileEntity fileEntity = new fileEntity(item.toURI());
         BeanUtils.copyProperties(item, fileEntity);
         fileEntity.setNeedHidden(false);
-        fileEntity.setSize(sizeFormat(FileUtil.size(item)));
+        /**
+         * 极度影响性能
+         */
+//        fileEntity.setSize(sizeFormat(FileUtil.size(item)));
         return fileEntity;
     }
 
@@ -106,9 +109,7 @@ public class filesUtil {
      * @return
      */
     public static List<fileEntity> file2FileEntity(List<File> item){
-        List result = new ArrayList();
-        item.forEach(file ->  result.add(file2FileEntity(file)));
-        return result;
+        return  item.stream().map(file->file2FileEntity(file)).collect(Collectors.toList());
     }
 
     /**
