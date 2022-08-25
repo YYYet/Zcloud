@@ -6,12 +6,12 @@ package com.chengzzz.zcloud.exception;
  * @author Yet
  * @date 2022/08/22 21:20
  **/
-public class pathErrorException extends Exception{
-    public pathErrorException() {
+public class PathErrorException extends Exception{
+    public PathErrorException() {
         super();
     }
 
-    public pathErrorException(String message) {
+    public PathErrorException(String message) {
         super(message);
     }
 }

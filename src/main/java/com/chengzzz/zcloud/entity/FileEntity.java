@@ -1,10 +1,6 @@
 package com.chengzzz.zcloud.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.File;
 import java.net.URI;
 
@@ -14,26 +10,26 @@ import java.net.URI;
  * @author Yet
  * @date 2022/08/22 21:27
  **/
-public class fileEntity extends File {
+public class FileEntity extends File {
 
     private Integer Order;
     private Boolean NeedHidden;
 
     private String size;
 
-    public fileEntity(String pathname) {
+    public FileEntity(String pathname) {
         super(pathname);
     }
 
-    public fileEntity(String parent, String child) {
+    public FileEntity(String parent, String child) {
         super(parent, child);
     }
 
-    public fileEntity(File parent, String child) {
+    public FileEntity(File parent, String child) {
         super(parent, child);
     }
 
-    public fileEntity(URI uri) {
+    public FileEntity(URI uri) {
         super(uri);
     }
 

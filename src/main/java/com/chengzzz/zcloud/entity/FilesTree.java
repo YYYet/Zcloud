@@ -6,5 +6,5 @@ package com.chengzzz.zcloud.entity;
  * @author Yet
  * @date 2022/08/22 21:17
  **/
-public class filesTree {
+public class FilesTree {
 }

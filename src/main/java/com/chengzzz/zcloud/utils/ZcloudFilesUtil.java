@@ -1,11 +1,9 @@
 package com.chengzzz.zcloud.utils;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.io.FileUtil;
-import com.chengzzz.zcloud.entity.fileEntity;
-import com.chengzzz.zcloud.exception.pathErrorException;
-import org.springframework.beans.BeanUtils;
+import com.chengzzz.zcloud.entity.FileEntity;
+import com.chengzzz.zcloud.exception.PathErrorException;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-import static com.chengzzz.zcloud.constant.constant.PATH_ERROR;
+import static com.chengzzz.zcloud.constant.Constant.PATH_ERROR;
 
 /**
  * zcloud文件工具类
@@ -24,21 +22,22 @@ import static com.chengzzz.zcloud.constant.constant.PATH_ERROR;
  **/
 
 
-public class filesUtil {
+@Component
+public class ZcloudFilesUtil {
 
     /**
      * 从当前路径中获取该层中所有的文件
      * @param path
      * @return
-     * @throws pathErrorException
+     * @throws PathErrorException
      */
-    public static List<fileEntity> getDirFromCurrentPath(String path) throws pathErrorException {
+    public  List<FileEntity> getDirFromCurrentPath(String path) throws PathErrorException {
         if (StringUtils.isEmpty(path)){
-            throw new pathErrorException(PATH_ERROR);
+            throw new PathErrorException(PATH_ERROR);
         }
         File[] ls = FileUtil.ls(path);
         List<File> files = Arrays.asList(ls);
-        return file2FileEntity(files);
+        return FileFormatUtil.file2FileEntity(files);
     }
 
     /**
@@ -47,10 +46,10 @@ public class filesUtil {
      * @param path
      * @return
      */
-    public static List<fileEntity> searchFiles(String name, String path){
+    public  List<FileEntity> searchFiles(String name, String path){
         List<File> files = FileUtil.loopFiles(path);
         List<File> collect = files.stream().filter(item -> item.getName().contains(name)).distinct().collect(Collectors.toList());
-        return file2FileEntity(collect);
+        return FileFormatUtil.file2FileEntity(collect);
     }
 
     /**
@@ -59,11 +58,11 @@ public class filesUtil {
      * @param path
      * @return
      */
-    public static List<fileEntity> searchDirs(String name, String path){
+    public  List<FileEntity> searchDirs(String name, String path){
         List<File> result = new ArrayList<>();
         List<File> directory = getDirectory(FileUtil.file(path), result);
         List<File> collect = directory.stream().filter(item -> item.getName().contains(name)).collect(Collectors.toList());
-        return file2FileEntity(collect);
+        return FileFormatUtil.file2FileEntity(collect);
     }
 
     /**
@@ -72,7 +71,7 @@ public class filesUtil {
      * @param result
      * @return
      */
-    private static List<File> getDirectory(File file, List<File> result) {
+    public List<File> getDirectory(File file, List<File> result) {
         File flist[] = file.listFiles();
         if (flist == null || flist.length == 0) {
             return result;
@@ -92,32 +91,14 @@ public class filesUtil {
      * @param item
      * @return
      */
-    public static fileEntity file2FileEntity(File item){
-        fileEntity fileEntity = new fileEntity(item.toURI());
-        BeanUtils.copyProperties(item, fileEntity);
-        fileEntity.setNeedHidden(false);
-        /**
-         * 极度影响性能
-         */
-//        fileEntity.setSize(sizeFormat(FileUtil.size(item)));
-        return fileEntity;
-    }
 
-    /**
-     * 转换为文件封装类
-     * @param item
-     * @return
-     */
-    public static List<fileEntity> file2FileEntity(List<File> item){
-        return  item.stream().map(file->file2FileEntity(file)).collect(Collectors.toList());
-    }
 
     /**
      * 创建文件/文件夹
      * @param path
      * @return
      */
-    public static File mkDir(String path){
+    public  File mkDir(String path){
       return FileUtil.mkdir(path);
     }
 
@@ -127,7 +108,7 @@ public class filesUtil {
      * @param path
      * @return
      */
-    public static boolean delDir(String path){
+    public  boolean delDir(String path){
         return FileUtil.del(path);
     }
 
@@ -137,7 +118,7 @@ public class filesUtil {
      * @param target
      * @param isOverride
      */
-    public static void move(String source, String target, boolean isOverride){
+    public  void move(String source, String target, boolean isOverride){
         FileUtil.move(new File(source), new File(target), isOverride);
     }
 
@@ -147,7 +128,7 @@ public class filesUtil {
      * @param target
      * @param isOverride
      */
-    public static void copy(String source, String target, boolean isOverride){
+    public  void copy(String source, String target, boolean isOverride){
         FileUtil.copy(new File(source), new File(target), isOverride);
     }
 
@@ -156,7 +137,7 @@ public class filesUtil {
      * @param size
      * @return
      */
-    public static String sizeFormat(long size){
+    public  String sizeFormat(long size){
         long kb = 1024;
         long mb = kb * 1024;
         long gb = mb * 1024;

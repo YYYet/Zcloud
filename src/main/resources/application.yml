@@ -15,8 +15,34 @@ spring:
     prefix: classpath:/templates/
     suffix: .html
 
+  redis:
+    database: 0
+    host: 10.3.0.191
+    port: 16379
+    password: Aa12345678
 
   security:
     user:
       name: admin
       password: admin
+
+#          @Value("${default.admin.username}")
+      #    public static String DEFAULT_ADMIN_USERNAME;
+      #
+      #    @Value("${default.admin.password}")
+      #    public static String DEFAULT_ADMIN_PASSWORD;
+      #
+      #    @Value("${global.other.admins}")
+      #    public static List GLOBAL_OTHER_ADMINS;
+
+default:
+  admin:
+    username: admin
+    password: admin
+
+global:
+  other-admin:
+    - username: test1
+      password: test1
+    - username: test2
+      password: test2

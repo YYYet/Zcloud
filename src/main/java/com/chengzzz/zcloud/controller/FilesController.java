@@ -2,15 +2,12 @@ package com.chengzzz.zcloud.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
-import com.chengzzz.zcloud.exception.pathErrorException;
+import com.chengzzz.zcloud.exception.PathErrorException;
 import com.chengzzz.zcloud.handler.NonStaticResourceHttpRequestHandler;
-import com.chengzzz.zcloud.responce.BaseResponce;
-import com.chengzzz.zcloud.utils.filesUtil;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.springframework.http.HttpHeaders;
+import com.chengzzz.zcloud.responce.RestResponce;
+import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.HashMap;
 
 /**
  * 文件控制器
@@ -27,19 +23,30 @@ import java.util.HashMap;
  * @date 2022/08/22 22:22
  **/
 @RestController
-public class filesController {
+public class FilesController {
+
+    /**
+     * TODO
+     * 获取文件树 需做切面 优先入缓存查询
+     * 文件操作 需做切面 更新缓存
+     * 需做定时任务刷新缓存
+     */
 
     @Resource
     NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
+
+    @Resource
+    FileServiceImpl fileService;
+
     /**
      * 获取路径下第一层文件及文件夹
      * @param path
      * @return
-     * @throws pathErrorException
+     * @throws PathErrorException
      */
     @GetMapping("/getFiles")
-    public BaseResponce getFiles(@RequestParam String path) throws pathErrorException {
-        return new BaseResponce(2000,"成功", filesUtil.getDirFromCurrentPath(path));
+    public RestResponce getFiles(@RequestParam String path) throws PathErrorException {
+        return RestResponce.sucess(fileService.getDirFromCurrentPath(path));
     }
 
 
@@ -47,22 +54,22 @@ public class filesController {
      * 创建文件/文件夹
      * @param path
      * @return
-     * @throws pathErrorException
+     * @throws PathErrorException
      */
     @GetMapping("/mkdir")
-    public BaseResponce mkDir(@RequestParam String path) throws pathErrorException {
-        return new BaseResponce(2000,"成功", filesUtil.getDirFromCurrentPath(path));
+    public RestResponce mkDir(@RequestParam String path) throws PathErrorException {
+        return RestResponce.sucess(fileService.getDirFromCurrentPath(path));
     }
 
     /**
      * 删除文件/文件夹
      * @param path
      * @return
-     * @throws pathErrorException
+     * @throws PathErrorException
      */
     @GetMapping("/delete")
-    public BaseResponce delete(@RequestParam String path) {
-        return new BaseResponce(2000,"成功", filesUtil.delDir(path));
+    public RestResponce delete(@RequestParam String path) {
+        return RestResponce.sucess( fileService.delDir(path));
     }
 
     /**
@@ -70,11 +77,11 @@ public class filesController {
      * @param name
      * @param path
      * @return
-     * @throws pathErrorException
+     * @throws PathErrorException
      */
     @GetMapping("/searchFiles")
-    public BaseResponce searchFiles(@RequestParam String name, @RequestParam String path) {
-        return new BaseResponce(2000,"成功", filesUtil.searchFiles(name, path));
+    public RestResponce searchFiles(@RequestParam String name, @RequestParam String path) {
+        return RestResponce.sucess(fileService.searchFiles(name, path));
     }
 
     /**
@@ -82,11 +89,11 @@ public class filesController {
      * @param name
      * @param path
      * @return
-     * @throws pathErrorException
+     * @throws PathErrorException
      */
     @GetMapping("/searchDirs")
-    public BaseResponce searchDirs(@RequestParam String name, @RequestParam String path) {
-        return new BaseResponce(2000,"成功", filesUtil.searchDirs(name, path));
+    public RestResponce searchDirs(@RequestParam String name, @RequestParam String path) {
+        return RestResponce.sucess(fileService.searchDirs(name, path));
     }
 
     @GetMapping("/fp/play")
