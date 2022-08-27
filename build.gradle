@@ -15,7 +15,13 @@ configurations {
 }
 
 repositories {
+
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/google/'}
+    maven { url 'https://maven.aliyun.com/repository/jcenter/'}
+    mavenLocal()
     mavenCentral()
+
 }
 
 dependencies {
@@ -27,34 +33,30 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-//    testImplementation 'org.springframework.security:spring-security-test'
-
+    // hutool工具类
     implementation 'cn.hutool:hutool-all:5.8.5'
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    // 阿帕奇工具类
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-
-
-    // https://mvnrepository.com/artifact/com.google.guava/guava
+    // guava
     implementation 'com.google.guava:guava:31.1-jre'
-
-
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+    // spring redis启动项
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.7.3'
-
-
-    //jackson三件套
+    // jackson三件套
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.13.3'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
-
+    // 阿帕奇集合工具类
     implementation 'commons-collections:commons-collections:3.2.2'
-
+    // 阿里巴巴fastjson
     implementation 'com.alibaba.fastjson2:fastjson2:2.0.12'
-
-
-
-
-
+    // 阿帕奇责任链工具
+    implementation 'commons-chain:commons-chain:1.2'
+    // sqlite驱动
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
+    // mybatis plus
+    implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.2'
+    // 数据库版本管理工具
+    implementation 'org.flywaydb:flyway-core:5.2.4'
 
 }
 

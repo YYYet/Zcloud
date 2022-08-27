@@ -28,6 +28,14 @@ public class RestResponce<T> implements Serializable {
         this.data = data;
     }
 
+    public static RestResponce sucess(){
+        return new RestResponce(HttpStatusEnum.HTTP_OK.getCode(), HttpStatusEnum.HTTP_OK.getMessage(), null);
+    }
+
+    public static RestResponce fail(){
+        return new RestResponce(HttpStatusEnum.HTTP_FAIL.getCode(), HttpStatusEnum.HTTP_FAIL.getMessage(), null);
+    }
+
 
     public static RestResponce sucess(Object data){
         return new RestResponce(HttpStatusEnum.HTTP_OK.getCode(), HttpStatusEnum.HTTP_OK.getMessage(), data);

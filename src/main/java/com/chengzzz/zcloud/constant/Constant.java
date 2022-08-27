@@ -11,6 +11,7 @@ import org.checkerframework.checker.index.qual.PolyUpperBound;
 public class Constant {
 
     public static String PATH_ERROR = "路径错误";
+    public static String BUCKET_ERROR = "该目录已作为存储空间，请更换存储源";
 
 
     public static String GLOBAL = "global:";

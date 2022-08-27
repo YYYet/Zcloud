@@ -13,11 +13,11 @@ import java.util.UUID;
  **/
 public class IdGenerateUtil {
 
-    static String UUID(){
+    public static String UUID(){
         return IdUtil.simpleUUID();
     }
 
-    static String IDWORK(){
+    public static String IDWORK(){
         return IdUtil.getSnowflake().nextIdStr();
     }
 }

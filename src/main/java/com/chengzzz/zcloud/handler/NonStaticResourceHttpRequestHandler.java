@@ -14,14 +14,14 @@ import java.io.IOException;
  * @author Yet
  * @date 2022/08/24 21:43
  **/
-@Component
-public class NonStaticResourceHttpRequestHandler extends ResourceHttpRequestHandler {
-
-    public static final String ATTR_FILE = "NON-STATIC-FILE";
-
-    @Override
-    protected Resource getResource(HttpServletRequest request) throws IOException {
-        String filePath = (String) request.getAttribute(ATTR_FILE);
-        return new FileSystemResource(filePath);
-    }
-}
+//@Component
+//public class NonStaticResourceHttpRequestHandler extends ResourceHttpRequestHandler {
+//
+//    public static final String ATTR_FILE = "NON-STATIC-FILE";
+//
+//    @Override
+//    protected Resource getResource(HttpServletRequest request) throws IOException {
+//        String filePath = (String) request.getAttribute(ATTR_FILE);
+//        return new FileSystemResource(filePath);
+//    }
+//}

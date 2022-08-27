@@ -17,6 +17,8 @@ public class FileEntity extends File {
 
     private String size;
 
+    private String password;
+    private String limitIp;
     public FileEntity(String pathname) {
         super(pathname);
     }
@@ -31,6 +33,14 @@ public class FileEntity extends File {
 
     public FileEntity(URI uri) {
         super(uri);
+    }
+
+    public String getLimitIp() {
+        return limitIp;
+    }
+
+    public void setLimitIp(String limitIp) {
+        this.limitIp = limitIp;
     }
 
     public String getSize() {
@@ -51,6 +61,14 @@ public class FileEntity extends File {
 
     public void setOrder(Integer order) {
         Order = order;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public void setNeedHidden(Boolean needHidden) {

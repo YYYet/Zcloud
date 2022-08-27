@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 10086
 spring:
   application:
     name: zcloud
@@ -14,17 +14,78 @@ spring:
     mode: HTML5
     prefix: classpath:/templates/
     suffix: .html
+  datasource:
+    #引用项目中的数据库文件
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite::resource:static/sqlite/test.db
+    username: root
+    password: root
+
+  flyway:
+    # 如果启动的时候需要flyway管理sql脚本的话，将enabled设置为true
+    enabled: true
+#    # 如果数据库不是空表，需要设置成 true，否则启动报错
+    baseline-on-migrate: true
+#    # 验证错误时 是否自动清除数据库 高危操作!
+#    clean-on-validation-error: false
+#    baseline-version: 0
+#    encoding: UTF-8
+#    # 开发环境最好开启 outOfOrder, 生产环境关闭 outOfOrder .
+#    out-of-order: false
+#    # 禁止清理数据库表
+#    clean-disabled: true
+#    # 校验
+#    validate-on-migrate: false
+#    # 版本控制日志表，默认flyway_schema_history,不同系统建议修改改数据
+#    table: flyway_schema_history
+
+#    # 是否启用flyway
+#    enabled: true
+#    # 编码格式，默认UTF-8
+#    encoding: UTF-8
+##    # 迁移sql脚本文件存放路径，默认db/migration
+#    locations: classpath:db/migration
+##    # 迁移sql脚本文件名称的前缀，默认V
+##    sql-migration-prefix: V
+##    # 迁移sql脚本文件名称的分隔符，默认2个下划线__
+##    sql-migration-separator: __
+##    # 迁移sql脚本文件名称的后缀
+##    sql-migration-suffixes: .sql
+##    # 迁移时是否进行校验，默认true
+##    validate-on-migrate: true
+#    # 当迁移发现数据库非空且存在没有元数据的表时，自动执行基准迁移，新建schema_version表
+#    baseline-on-migrate: true
+#    mixed: true
+#    clean-disabled: true
 
   redis:
     database: 0
-    host: 10.3.0.191
-    port: 16379
+    host: 106.52.82.52
+    port: 6379
     password: Aa12345678
 
   security:
     user:
       name: admin
       password: admin
+  jackson:
+    #日期格式化
+    date-format: yyyy-MM-dd HH:mm:ss
+    serialization:
+      #格式化输出
+      indent_output: true
+      #忽略无法转换的对象
+      fail_on_empty_beans: false
+    #设置空如何序列化
+    defaultPropertyInclusion: NON_EMPTY
+    deserialization:
+      #允许对象忽略json中不存在的属性
+      fail_on_unknown_properties: false
+    parser:
+      #允许出现特殊字符和转义符
+      allow_unquoted_control_chars: true
+      #允许出现单引号
+      allow_single_quotes: true
 
 #          @Value("${default.admin.username}")
       #    public static String DEFAULT_ADMIN_USERNAME;

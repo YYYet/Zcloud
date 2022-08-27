@@ -2,9 +2,11 @@ package com.chengzzz.zcloud.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import com.chengzzz.zcloud.dto.BucketDTO;
 import com.chengzzz.zcloud.exception.PathErrorException;
-import com.chengzzz.zcloud.handler.NonStaticResourceHttpRequestHandler;
+//import com.chengzzz.zcloud.handler.NonStaticResourceHttpRequestHandler;
 import com.chengzzz.zcloud.responce.RestResponce;
+import com.chengzzz.zcloud.service.cacheservice.impl.CacheServiceImpl;
 import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -32,21 +34,26 @@ public class FilesController {
      * 需做定时任务刷新缓存
      */
 
+//    @Resource
+//    NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
+
+
     @Resource
-    NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
+    CacheServiceImpl cacheService;
 
     @Resource
     FileServiceImpl fileService;
 
     /**
      * 获取路径下第一层文件及文件夹
-     * @param path
+     * @param bucketId
      * @return
      * @throws PathErrorException
      */
     @GetMapping("/getFiles")
-    public RestResponce getFiles(@RequestParam String path) throws PathErrorException {
-        return RestResponce.sucess(fileService.getDirFromCurrentPath(path));
+    public RestResponce getFiles(@RequestParam String bucketId) throws PathErrorException {
+        BucketDTO bucket = cacheService.getBucketByKey(bucketId);
+        return RestResponce.sucess(fileService.getDirFromCurrentPath(bucket.getPath()));
     }
 
 
@@ -231,28 +238,28 @@ public class FilesController {
 
 
 
-    @GetMapping(value = "/mp4/play")
-    public void aloneVideoPlay2(HttpServletRequest request, @RequestParam("path") String path, HttpServletResponse response) {
-        try {
-            File file = FileUtil.file(path);
-            if (file.exists()){
-                String mimeType = Files.probeContentType(file.toPath());
-                System.out.println("mimeType "+mimeType);
-                System.out.println("mimeType hutool "+FileUtil.getMimeType(path));
-                if (!StringUtils.isEmpty(mimeType)) {
-                    response.setContentType("video/mp4");
-                }
-                request.setAttribute(NonStaticResourceHttpRequestHandler.ATTR_FILE, path);
-                nonStaticResourceHttpRequestHandler.handleRequest(request, response);
-            }else {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-            }
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-    }
+//    @GetMapping(value = "/mp4/play")
+//    public void aloneVideoPlay2(HttpServletRequest request, @RequestParam("path") String path, HttpServletResponse response) {
+//        try {
+//            File file = FileUtil.file(path);
+//            if (file.exists()){
+//                String mimeType = Files.probeContentType(file.toPath());
+//                System.out.println("mimeType "+mimeType);
+//                System.out.println("mimeType hutool "+FileUtil.getMimeType(path));
+//                if (!StringUtils.isEmpty(mimeType)) {
+//                    response.setContentType("video/mp4");
+//                }
+//                request.setAttribute(NonStaticResourceHttpRequestHandler.ATTR_FILE, path);
+//                nonStaticResourceHttpRequestHandler.handleRequest(request, response);
+//            }else {
+//                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+//                response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
+//            }
+//        }catch (Exception e){
+//            System.out.println(e);
+//        }
+//
+//    }
 
 
 }
