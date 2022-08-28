@@ -17,6 +17,7 @@ import java.io.Serializable;
 
 
 @Data
+@NoArgsConstructor
 public class RestResponce<T> implements Serializable {
     private Integer code;
     private String message;

@@ -2,6 +2,7 @@ package com.chengzzz.zcloud.utils;
 
 import cn.hutool.core.io.FileUtil;
 import com.chengzzz.zcloud.entity.FileEntity;
+import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -31,13 +32,13 @@ public class ZcloudFilesUtil {
      * @return
      * @throws PathErrorException
      */
-    public  List<FileEntity> getDirFromCurrentPath(String path) throws PathErrorException {
+    public  List<FileEntityItem> getDirFromCurrentPath(String path) throws PathErrorException {
         if (StringUtils.isEmpty(path)){
             throw new PathErrorException(PATH_ERROR);
         }
         File[] ls = FileUtil.ls(path);
         List<File> files = Arrays.asList(ls);
-        return FileFormatUtil.file2FileEntity(files);
+        return FileFormatUtil.file2FileEntityItem(files);
     }
 
     /**
@@ -46,10 +47,10 @@ public class ZcloudFilesUtil {
      * @param path
      * @return
      */
-    public  List<FileEntity> searchFiles(String name, String path){
+    public  List<FileEntityItem> searchFiles(String name, String path){
         List<File> files = FileUtil.loopFiles(path);
         List<File> collect = files.stream().filter(item -> item.getName().contains(name)).distinct().collect(Collectors.toList());
-        return FileFormatUtil.file2FileEntity(collect);
+        return FileFormatUtil.file2FileEntityItem(collect);
     }
 
     /**
@@ -58,11 +59,11 @@ public class ZcloudFilesUtil {
      * @param path
      * @return
      */
-    public  List<FileEntity> searchDirs(String name, String path){
+    public  List<FileEntityItem> searchDirs(String name, String path){
         List<File> result = new ArrayList<>();
         List<File> directory = getDirectory(FileUtil.file(path), result);
         List<File> collect = directory.stream().filter(item -> item.getName().contains(name)).collect(Collectors.toList());
-        return FileFormatUtil.file2FileEntity(collect);
+        return FileFormatUtil.file2FileEntityItem(collect);
     }
 
     /**

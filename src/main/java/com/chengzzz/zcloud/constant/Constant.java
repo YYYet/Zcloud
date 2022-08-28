@@ -13,11 +13,22 @@ public class Constant {
     public static String PATH_ERROR = "路径错误";
     public static String BUCKET_ERROR = "该目录已作为存储空间，请更换存储源";
 
+    public final static String OP_ADD = "新增";
+    public final static String OP_ACCESS = "访问";
+    public final static String OP_DEL = "删除";
+    public final static String OP_MV = "移动";
+    public final static String OP_CP = "复制";
+    public final static String OP_DW = "下载";
+    public final static String OP_PRE = "预览";
+
 
     public static String GLOBAL = "global:";
     public static String DEFAULT = "default:";
 
     public static String BUCKET = "bucket:";
+
+    public static String FILES = "files:";
+    public static String PATH_FILES = "paths:";
 
     public static String OTHER_ADMIN = "otherAdmins";
     public static String USER_NAME = "username";

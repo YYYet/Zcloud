@@ -12,13 +12,16 @@ import java.net.URI;
  **/
 public class FileEntity extends File {
 
+
     private Integer Order;
     private Boolean NeedHidden;
-
     private String size;
+    private String password = "";
+    private String limitIp = "";
 
-    private String password;
-    private String limitIp;
+    public FileEntity() {
+        super("");
+    }
     public FileEntity(String pathname) {
         super(pathname);
     }

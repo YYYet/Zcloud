@@ -1,14 +1,25 @@
 package com.chengzzz.zcloud.service.cacheservice.impl;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import com.chengzzz.zcloud.constant.Constant;
 import com.chengzzz.zcloud.dto.BucketDTO;
+import com.chengzzz.zcloud.dto.FileHandlerResult;
+import com.chengzzz.zcloud.entity.FileEntity;
+import com.chengzzz.zcloud.entity.FileEntityItem;
+import com.chengzzz.zcloud.exception.PathErrorException;
 import com.chengzzz.zcloud.service.cacheservice.IcacheService;
+import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
 import com.chengzzz.zcloud.utils.RedisCacheUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +31,10 @@ public class CacheServiceImpl implements IcacheService {
 
     @Resource
     private RedisCacheUtil redisCacheUtil;
+
+    @Resource
+    private FileServiceImpl fileService;
+
 
     @Override
     public List<BucketDTO> getAllBucketFromCache() {
@@ -35,5 +50,32 @@ public class CacheServiceImpl implements IcacheService {
     @Override
     public BucketDTO getBucketByKey(String key) {
         return (BucketDTO)redisCacheUtil.getCacheObject(Constant.BUCKET+key);
+    }
+
+    @Override
+    public List<FileHandlerResult> initFile2Cache() throws PathErrorException {
+        List<BucketDTO> allBucketFromCache = getAllBucketFromCache();
+        List<FileHandlerResult> results = new ArrayList<>();
+        TimeInterval timer = DateUtil.timer();
+        for (BucketDTO bucketDTO : allBucketFromCache) {
+            if (StringUtils.isEmpty(bucketDTO.getPath())){
+                continue;
+            }
+            Map<String, FileEntityItem> dirFromCurrentPath = fileService.getDirFromCurrentPath(bucketDTO)
+                    .stream().collect(Collectors.toMap(FileEntityItem::getPath, item -> item));
+
+            redisCacheUtil.setCacheMap(Constant.FILES+bucketDTO.getBucketId(), dirFromCurrentPath);
+
+//            List<FileEntityItem> dirFromCurrentPath = fileService.getDirFromCurrentPath(bucketDTO);
+//            redisCacheUtil.setCacheList(Constant.FILES+bucketDTO.getBucketId(), dirFromCurrentPath);
+            FileHandlerResult build = FileHandlerResult.builder()
+                    .files(dirFromCurrentPath)
+                    .bucket(bucketDTO)
+                    .spendTime(String.valueOf(timer.intervalRestart() / 1000))
+                    .completeTime(DateTime.now().toString())
+                    .build();
+            results.add(build);
+        }
+        return results;
     }
 }

@@ -4,6 +4,7 @@ package com.chengzzz.zcloud.chain;
 import com.chengzzz.zcloud.dto.BucketDTO;
 import com.chengzzz.zcloud.dto.FileRequestDTO;
 import com.chengzzz.zcloud.entity.FileEntity;
+import com.chengzzz.zcloud.entity.FileEntityItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class FileContext extends ContextBase {
 
     BucketDTO bucketDTO;
 
-    List<FileEntity> Files;
+    List<FileEntityItem> Files;
 
     FileRequestDTO fileRequest;
 

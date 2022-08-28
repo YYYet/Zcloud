@@ -2,6 +2,9 @@ package com.chengzzz.zcloud.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.Getter;
+
+import java.util.List;
 
 /**
  * @author Yet
@@ -9,10 +12,12 @@ import lombok.Data;
  **/
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class BucketDTO {
  private String bucketId;
  private String password;
- private String limitIp;
+ private List<String> whiteIpList;
  private String path;
+ private Boolean needPassword;
+
 }

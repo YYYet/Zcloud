@@ -57,6 +57,9 @@ dependencies {
     implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.2'
     // 数据库版本管理工具
     implementation 'org.flywaydb:flyway-core:5.2.4'
+    // AOP
+    implementation 'org.springframework.boot:spring-boot-starter-aop:2.7.3'
+
 
 }
 

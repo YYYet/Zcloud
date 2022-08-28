@@ -2,12 +2,18 @@ package com.chengzzz.zcloud.controller;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
+import com.chengzzz.zcloud.chain.FileChain;
+import com.chengzzz.zcloud.chain.FileContext;
+import com.chengzzz.zcloud.constant.Constant;
 import com.chengzzz.zcloud.dto.BucketDTO;
+import com.chengzzz.zcloud.dto.FileRequestDTO;
+import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
 //import com.chengzzz.zcloud.handler.NonStaticResourceHttpRequestHandler;
 import com.chengzzz.zcloud.responce.RestResponce;
 import com.chengzzz.zcloud.service.cacheservice.impl.CacheServiceImpl;
 import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
+import com.chengzzz.zcloud.utils.IpUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.List;
 
 /**
  * 文件控制器
@@ -37,7 +44,11 @@ public class FilesController {
 //    @Resource
 //    NonStaticResourceHttpRequestHandler nonStaticResourceHttpRequestHandler;
 
+    @Resource
+    FileChain fileChain;
 
+    @Resource
+    HttpServletRequest request;
     @Resource
     CacheServiceImpl cacheService;
 
@@ -51,9 +62,35 @@ public class FilesController {
      * @throws PathErrorException
      */
     @GetMapping("/getFiles")
-    public RestResponce getFiles(@RequestParam String bucketId) throws PathErrorException {
+    public RestResponce getFiles(@RequestParam String bucketId, @RequestParam(required = false) String userIp, @RequestParam(required = false)  String password) throws Exception {
+        System.out.println(IpUtil.getIpAddr(request));
         BucketDTO bucket = cacheService.getBucketByKey(bucketId);
-        return RestResponce.sucess(fileService.getDirFromCurrentPath(bucket.getPath()));
+        FileRequestDTO fileRequest = new FileRequestDTO();
+        fileRequest.setBucketId(bucket.getBucketId());
+        fileRequest.setUserIp(userIp);
+        fileRequest.setPassword(password);
+        fileRequest.setUserOperation(Constant.OP_ACCESS);
+        fileRequest.setPath(bucket.getPath());
+
+        List<FileEntityItem> fileEntityItemList = fileService.getAllFiles(bucket);
+
+        /**
+         * 构造责任链上下文
+         */
+        FileContext context = FileContext.builder()
+                .Files(fileEntityItemList)
+                .bucketDTO(bucket)
+                .fileRequest(fileRequest)
+                .build();
+        //启动责任链
+        fileChain.execute(context);
+        return RestResponce.sucess(fileEntityItemList);
+    }
+
+    @GetMapping("/getFilesByPath")
+    public RestResponce getFilesByPath(@RequestParam String path, @RequestParam String userIp) throws PathErrorException {
+
+        return RestResponce.sucess(fileService.getFileList(path));
     }
 
 
@@ -65,7 +102,7 @@ public class FilesController {
      */
     @GetMapping("/mkdir")
     public RestResponce mkDir(@RequestParam String path) throws PathErrorException {
-        return RestResponce.sucess(fileService.getDirFromCurrentPath(path));
+        return RestResponce.sucess();
     }
 
     /**

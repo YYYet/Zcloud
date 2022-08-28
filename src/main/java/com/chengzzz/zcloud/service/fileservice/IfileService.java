@@ -1,7 +1,10 @@
 package com.chengzzz.zcloud.service.fileservice;
 
 import cn.hutool.core.io.FileUtil;
+import com.chengzzz.zcloud.dto.BucketDTO;
+import com.chengzzz.zcloud.dto.FileRequestDTO;
 import com.chengzzz.zcloud.entity.FileEntity;
+import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
@@ -11,13 +14,17 @@ import java.util.List;
 
 
 public interface IfileService {
+
+    boolean initFile2Cache(String bucketId);
+
+    List<FileEntityItem> getAllFiles(BucketDTO bucket) throws PathErrorException;
     /**
      * 从当前路径中获取该层中所有的文件
-     * @param path
+     * @param bucket
      * @return
      * @throws PathErrorException
      */
-    List<FileEntity> getDirFromCurrentPath(String path) throws PathErrorException;
+    List<FileEntityItem> getDirFromCurrentPath(BucketDTO bucket) throws PathErrorException;
 
     /**
      * 模糊匹配文件
@@ -25,7 +32,7 @@ public interface IfileService {
      * @param path
      * @return
      */
-    List<FileEntity> searchFiles(String name, String path);
+    List<FileEntityItem> searchFiles(String name, String path);
 
     /**
      * 模糊匹配文件夹
@@ -33,7 +40,7 @@ public interface IfileService {
      * @param path
      * @return
      */
-    List<FileEntity> searchDirs(String name, String path);
+    List<FileEntityItem> searchDirs(String name, String path);
 
     /**
      * 递归获取文件夹
