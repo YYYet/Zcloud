@@ -6,6 +6,7 @@ import com.chengzzz.zcloud.config.CommonConfig;
 import com.chengzzz.zcloud.config.GlobalConfig;
 import com.chengzzz.zcloud.config.ZcloudInitConfig;
 import com.chengzzz.zcloud.constant.Constant;
+import com.chengzzz.zcloud.dto.FileConfigDTO;
 import com.chengzzz.zcloud.dto.FileHandlerResult;
 import com.chengzzz.zcloud.entity.FileEntity;
 import com.chengzzz.zcloud.model.ConfigDo;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +62,7 @@ public class ZcloudApplication {
     @PostConstruct
     public void init(){
         clearBaseCache();
-
+        contextLoads();
         redisCacheUtil.setCacheObject(Constant.DEFAULT_USER_NAME, zcloudInitConfig.getDefaultAdminUsername());
         redisCacheUtil.setCacheObject(Constant.DEFAULT_USER_PASSWORD, zcloudInitConfig.getDefaultAdminPassword());
         redisCacheUtil.setCacheList(Constant.GLOBAL_OTHER_ADMIN, globalConfig.getOtherAdmin());
@@ -75,6 +77,24 @@ public class ZcloudApplication {
 
     }
 
+
+    void contextLoads() {
+        FileConfigDTO fileConfigDTO = new FileConfigDTO();
+        List<String> password = new ArrayList<>();
+        password.add("12345");
+        password.add("123456");
+
+        List<String> ip = new ArrayList<>();
+        ip.add("10.3.0.191");
+        ip.add("10.3.0.192");
+
+        fileConfigDTO.setWhiteIpList(ip);
+        fileConfigDTO.setPassword(password);
+
+
+        redisCacheUtil.setCacheObject("fileConfig:C:Users\\\\Yet\\\\Nutstore\\\\1\\\\23种设计模式\\\\mongoDb.md", fileConfigDTO);
+        redisCacheUtil.setCacheObject("fileConfig:C:\\\\Users\\\\Yet\\\\Nutstore\\\\1\\\\23种设计模式", fileConfigDTO);
+    }
     public void clearBaseCache(){
         redisCacheUtil.deleteObject(Constant.DEFAULT_USER_NAME);
         redisCacheUtil.deleteObject(Constant.DEFAULT_USER_PASSWORD);

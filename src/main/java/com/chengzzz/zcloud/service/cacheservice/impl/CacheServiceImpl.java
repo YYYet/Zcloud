@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -82,5 +79,9 @@ public class CacheServiceImpl implements IcacheService {
     @Override
     public List<FileEntity> getAllFileFromCacheByPath(String path) {
         return redisCacheUtil.getCacheList(Constant.FILES+path);
+    }
+
+    public Map getFileFromHashCacheByPath(String path) {
+        return redisCacheUtil.getCacheMap(Constant.PATH_FILES+path);
     }
 }

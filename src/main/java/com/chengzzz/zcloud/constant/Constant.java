@@ -25,6 +25,8 @@ public class Constant {
     public static String GLOBAL = "global:";
     public static String DEFAULT = "default:";
     public static String CONFIG = "config:";
+
+    public static String FILE_CONFIG = "fileConfig:";
     public static String BUCKET = "bucket:";
 
     public static String FILES = "files:";

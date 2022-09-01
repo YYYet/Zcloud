@@ -28,8 +28,6 @@ public class FileContext extends ContextBase {
 
     BucketDTO bucketDTO;
 
-    FileEntityItem fileEntityDTO;
-
     List<FileEntityItem> Files;
 
     FileRequestDTO fileRequest;

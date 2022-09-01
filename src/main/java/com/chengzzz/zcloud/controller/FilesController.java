@@ -24,6 +24,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件控制器
@@ -109,10 +110,12 @@ public class FilesController {
         fileRequest.setUserOperation(Constant.OP_ACCESS);
         fileRequest.setPath(bucket.getPath());
 
+
         FileContext context = FileContext.builder()
                 .Files(fileList)
                 .bucketDTO(bucket)
                 .fileRequest(fileRequest)
+                .isBucket(false)
                 .build();
         //启动责任链
         fileChain.execute(context);

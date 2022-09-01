@@ -1,13 +1,19 @@
 package com.chengzzz.zcloud.chain.command;
 
 import com.chengzzz.zcloud.chain.FileContext;
+import com.chengzzz.zcloud.constant.Constant;
+import com.chengzzz.zcloud.dto.FileConfigDTO;
 import com.chengzzz.zcloud.utils.IpUtil;
+import com.chengzzz.zcloud.utils.RedisCacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
 
 /**
  * @author Yet
@@ -16,15 +22,20 @@ import org.springframework.util.StringUtils;
 @Service
 @Slf4j
 public class CheckBucketLimitIpCommand implements Command {
+
+    @Resource
+    RedisCacheUtil redisCacheUtil;
     @Override
     public boolean execute(Context context) throws Exception {
         FileContext fileContext = (FileContext)context;
         if (!fileContext.getIsBucket()){
-            if (StringUtils.isEmpty(fileContext.getFileEntityDTO().getWhiteIpList())){
+            String path = fileContext.getFileRequest().getPath().replace("\\", "\\\\");
+            FileConfigDTO fileConfigDTO =  (FileConfigDTO)redisCacheUtil.getCacheObject(Constant.FILE_CONFIG+path);
+            if (fileConfigDTO == null || ObjectUtils.isEmpty(fileConfigDTO.getWhiteIpList())){
                 log.info("该文件无须ip白名单校验");
                 return false;
             }
-            Assert.isTrue(IpUtil.isWhiteIp(fileContext.getFileRequest().getUserIp(), fileContext.getFileEntityDTO().getWhiteIpList()), "您无权访问该文件，请联系管理员授权");
+            Assert.isTrue(IpUtil.isWhiteIp(fileContext.getFileRequest().getUserIp(), fileConfigDTO.getWhiteIpList()), "您无权访问该文件，请联系管理员授权");
             return false;
         }
 

@@ -45,7 +45,7 @@ public class FileAspect {
         log.info("切面bucket ", bucket);
 
         if (true && redisCacheUtil.hasKey(Constant.FILES + bucket.getBucketId())){
-            log.info("缓存读取");
+            log.info("桶缓存读取");
 //            List<FileEntityItem> finalResult = result;
 //            redisCacheUtil.getCacheMap(Constant.FILES + bucket.getBucketId()).forEach((key, value) ->{
 //                System.out.println("key:"+key+"----"+"value:"+value);
@@ -90,7 +90,7 @@ public class FileAspect {
         log.info("切面path ", path);
 
         if (true && redisCacheUtil.hasKey(Constant.PATH_FILES + path)){
-            log.info("缓存读取");
+            log.info("文件缓存读取");
             result = redisCacheUtil.getCacheMap(Constant.PATH_FILES + path).values()
                     .stream()
                     .map(item -> (FileEntityItem)item)
