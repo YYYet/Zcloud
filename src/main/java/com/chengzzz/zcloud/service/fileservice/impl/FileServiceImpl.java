@@ -11,9 +11,7 @@ import com.chengzzz.zcloud.service.fileservice.IfileService;
 import com.chengzzz.zcloud.utils.RedisCacheUtil;
 import com.chengzzz.zcloud.utils.ZcloudFilesUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.convert.Bucket;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.List;
@@ -90,6 +88,7 @@ public class FileServiceImpl extends AbstractBaseFileServerCore implements Ifile
     public List<FileEntityItem> getFileList(String path) {
         List<FileEntityItem> dirFromCurrentPath = null;
         try {
+//            dirFromCurrentPath = zcloudFilesUtil.getDirFromCurrentPath(path);
             dirFromCurrentPath = zcloudFilesUtil.getDirFromCurrentPath(path);
         }catch (Exception e){
             log.error("获取文件列表异常", e);
@@ -98,6 +97,19 @@ public class FileServiceImpl extends AbstractBaseFileServerCore implements Ifile
         return dirFromCurrentPath;
     }
 
+    @Override
+    public List<String> getFileHashKeyList(String path) {
+//        List<FileEntityItem> dirFromCurrentPath = null;
+//        try {
+////            dirFromCurrentPath = zcloudFilesUtil.getDirFromCurrentPath(path);
+//            dirFromCurrentPath = this.getFileList(path);
+////            dirFromCurrentPath.stream().map(item -> item.getPath()).collect(Collectors.toList());
+//        }catch (Exception e){
+//            log.error("获取文件列表异常", e);
+//            return dirFromCurrentPath;
+//        }
+        return null;
+    }
     @Override
     public String getUrl(String path) {
         return null;

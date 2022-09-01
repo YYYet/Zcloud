@@ -78,4 +78,9 @@ public class CacheServiceImpl implements IcacheService {
         }
         return results;
     }
+
+    @Override
+    public List<FileEntity> getAllFileFromCacheByPath(String path) {
+        return redisCacheUtil.getCacheList(Constant.FILES+path);
+    }
 }
