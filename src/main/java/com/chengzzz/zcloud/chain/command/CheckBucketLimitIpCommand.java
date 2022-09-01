@@ -18,14 +18,24 @@ import org.springframework.util.StringUtils;
 public class CheckBucketLimitIpCommand implements Command {
     @Override
     public boolean execute(Context context) throws Exception {
-        log.info("开始校验bucket ip白名单");
         FileContext fileContext = (FileContext)context;
-        if (StringUtils.isEmpty(fileContext.getBucketDTO().getWhiteIpList())){
-            log.info("无须ip白名单校验");
+        if (!fileContext.getIsBucket()){
+            if (StringUtils.isEmpty(fileContext.getFileEntityDTO().getWhiteIpList())){
+                log.info("该文件无须ip白名单校验");
+                return false;
+            }
+            Assert.isTrue(IpUtil.isWhiteIp(fileContext.getFileRequest().getUserIp(), fileContext.getFileEntityDTO().getWhiteIpList()), "您无权访问该文件，请联系管理员授权");
             return false;
         }
-        System.out.println(IpUtil.isWhiteIp(fileContext.getBucketDTO(), fileContext.getFileRequest()));
+
+        log.info("开始校验bucket ip白名单");
+
+        if (StringUtils.isEmpty(fileContext.getBucketDTO().getWhiteIpList())){
+            log.info("该桶无须ip白名单校验");
+            return false;
+        }
         Assert.isTrue(IpUtil.isWhiteIp(fileContext.getBucketDTO(), fileContext.getFileRequest()), "您无权访问，请联系管理员授权");
+        System.out.println(fileContext.getBucketDTO().getWhiteIpList()+" 通过白名单");
         return false;
     }
 }

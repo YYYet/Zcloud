@@ -63,7 +63,7 @@ public class FilesController {
      */
     @GetMapping("/getFiles")
     public RestResponce getFiles(@RequestParam String bucketId, @RequestParam(required = false) String userIp, @RequestParam(required = false)  String password) throws Exception {
-        System.out.println(IpUtil.getIpAddr(request));
+        System.out.println("ip："+IpUtil.getIpAddr(request));
         BucketDTO bucket = cacheService.getBucketByKey(bucketId);
         FileRequestDTO fileRequest = new FileRequestDTO();
         fileRequest.setBucketId(bucket.getBucketId());
@@ -87,10 +87,36 @@ public class FilesController {
         return RestResponce.sucess(fileEntityItemList);
     }
 
+    /**
+     * 通过路径访问下一层 且经过密码ip校验
+     * @param path
+     * @param bucketId
+     * @param password
+     * @param userIp
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/getFilesByPath")
-    public RestResponce getFilesByPath(@RequestParam String path, @RequestParam String userIp) throws PathErrorException {
+    public RestResponce getFilesByPath(@RequestParam String path,@RequestParam String bucketId,@RequestParam String password, @RequestParam String userIp) throws Exception {
+        List<FileEntityItem> fileList = fileService.getFileList(path);
 
-        return RestResponce.sucess(fileService.getFileList(path));
+        System.out.println("ip："+IpUtil.getIpAddr(request));
+        BucketDTO bucket = cacheService.getBucketByKey(bucketId);
+        FileRequestDTO fileRequest = new FileRequestDTO();
+        fileRequest.setBucketId(bucket.getBucketId());
+        fileRequest.setUserIp(userIp);
+        fileRequest.setPassword(password);
+        fileRequest.setUserOperation(Constant.OP_ACCESS);
+        fileRequest.setPath(bucket.getPath());
+
+        FileContext context = FileContext.builder()
+                .Files(fileList)
+                .bucketDTO(bucket)
+                .fileRequest(fileRequest)
+                .build();
+        //启动责任链
+        fileChain.execute(context);
+        return RestResponce.sucess(fileList);
     }
 
 

@@ -37,7 +37,7 @@ public class FileAspect {
     @Around(value = "execution(public * com.chengzzz.zcloud.service.fileservice.IfileService.getAllFiles(..))")
     public Object handler(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         log.info(String.valueOf(proceedingJoinPoint));
-        List<FileEntityItem> result;
+        List<FileEntityItem> result = new ArrayList<>();
         // 获取请求路径
         Object[] args = proceedingJoinPoint.getArgs();
         log.info("args {}",Arrays.toString(args));
@@ -46,19 +46,32 @@ public class FileAspect {
 
         if (true && redisCacheUtil.hasKey(Constant.FILES + bucket.getBucketId())){
             log.info("缓存读取");
+//            List<FileEntityItem> finalResult = result;
+//            redisCacheUtil.getCacheMap(Constant.FILES + bucket.getBucketId()).forEach((key, value) ->{
+//                System.out.println("key:"+key+"----"+"value:"+value);
+//                finalResult.add((FileEntityItem)value);
+//            });
+
+//            result = redisCacheUtil.getCacheList(Constant.FILES + bucket.getBucketId());
+//            log.info("缓存读取");
+//            result = finalResult;
             result = redisCacheUtil.getCacheMap(Constant.FILES + bucket.getBucketId()).values()
                     .stream()
                     .map(item -> (FileEntityItem)item)
                     .collect(Collectors.toList());
+            log.info("缓存读取完成");
         }else {
             log.info("本地读取");
             result = (List<FileEntityItem>)proceedingJoinPoint.proceed();
             //重写缓存
+            log.info("重写缓存");
             Map<String, FileEntityItem> collect = result.stream()
                     .collect(Collectors.toMap(FileEntityItem::getPath, item -> item));
             redisCacheUtil.deleteObject(Constant.FILES + bucket.getBucketId());
             redisCacheUtil.setCacheMap(Constant.FILES + bucket.getBucketId(), collect);
-            log.info("重写缓存");
+//            redisCacheUtil.deleteObject(Constant.FILES + bucket.getBucketId());
+//            redisCacheUtil.setCacheList(Constant.FILES + bucket.getBucketId(), result);
+            log.info("重写成功");
         }
         return result;
     }

@@ -24,6 +24,7 @@ public class CheckBucketPasswordCommand implements Command {
             return false;
         }
         Assert.isTrue(fileContext.getBucketDTO().getPassword().equals(fileContext.getFileRequest().getPassword()), "密码错误");
+        log.info(fileContext.getBucketDTO().getPassword()+" bucket密码正确");
         return false;
     }
 }

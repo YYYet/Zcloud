@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +42,9 @@ public class ZcloudFilesUtil {
         if (StringUtils.isEmpty(path)){
             throw new PathErrorException(PATH_ERROR);
         }
-//        File[] ls = FileUtil.ls(path);
-        List<File> files =  FileUtil.loopFiles(path);
+        File[] ls = FileUtil.ls(path);
+//        List<File> files =  FileUtil.loopFiles(path);
+        List<File> files = Arrays.asList(ls);
         return FileFormatUtil.file2FileEntityItem(files);
     }
 
