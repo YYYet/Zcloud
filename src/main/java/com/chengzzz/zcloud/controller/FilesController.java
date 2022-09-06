@@ -6,6 +6,7 @@ import com.chengzzz.zcloud.chain.FileChain;
 import com.chengzzz.zcloud.chain.FileContext;
 import com.chengzzz.zcloud.constant.Constant;
 import com.chengzzz.zcloud.dto.BucketDTO;
+import com.chengzzz.zcloud.dto.BuildUrlReqDTO;
 import com.chengzzz.zcloud.dto.FileRequestDTO;
 import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
@@ -13,6 +14,7 @@ import com.chengzzz.zcloud.exception.PathErrorException;
 import com.chengzzz.zcloud.responce.RestResponce;
 import com.chengzzz.zcloud.service.cacheservice.impl.CacheServiceImpl;
 import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
+import com.chengzzz.zcloud.utils.IdGenerateUtil;
 import com.chengzzz.zcloud.utils.IpUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 文件控制器
@@ -56,6 +59,16 @@ public class FilesController {
     FileServiceImpl fileService;
 
     /**
+     * 生成url
+     * @param BuildUrlReqDTO 路径
+     * @return RestResponce
+     */
+    @PostMapping("/buildUrl")
+    public RestResponce buildUrl(@RequestBody BuildUrlReqDTO buildUrlReqDTO){
+        return RestResponce.sucess(cacheService.buildUrlKey(buildUrlReqDTO.getPath()));
+    }
+
+    /**
      * 获取路径下第一层文件及文件夹
      * @param bucketId
      * @return
@@ -63,7 +76,7 @@ public class FilesController {
      */
     @GetMapping("/getFiles")
     public RestResponce getFiles(@RequestParam String bucketId, @RequestParam(required = false) String userIp, @RequestParam(required = false)  String password) throws Exception {
-        System.out.println(IpUtil.getIpAddr(request));
+        System.out.println("ip："+IpUtil.getIpAddr(request));
         BucketDTO bucket = cacheService.getBucketByKey(bucketId);
         FileRequestDTO fileRequest = new FileRequestDTO();
         fileRequest.setBucketId(bucket.getBucketId());
@@ -81,16 +94,45 @@ public class FilesController {
                 .Files(fileEntityItemList)
                 .bucketDTO(bucket)
                 .fileRequest(fileRequest)
+                .isBucket(false)
                 .build();
         //启动责任链
         fileChain.execute(context);
         return RestResponce.sucess(fileEntityItemList);
     }
 
+    /**
+     * 通过路径访问下一层 且经过密码ip校验
+     * @param path
+     * @param bucketId
+     * @param password
+     * @param userIp
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/getFilesByPath")
-    public RestResponce getFilesByPath(@RequestParam String path, @RequestParam String userIp) throws PathErrorException {
+    public RestResponce getFilesByPath(@RequestParam String path,@RequestParam String bucketId,@RequestParam String password, @RequestParam String userIp) throws Exception {
+        List<FileEntityItem> fileList = fileService.getFileList(path);
 
-        return RestResponce.sucess(fileService.getFileList(path));
+        System.out.println("ip："+IpUtil.getIpAddr(request));
+        BucketDTO bucket = cacheService.getBucketByKey(bucketId);
+        FileRequestDTO fileRequest = new FileRequestDTO();
+        fileRequest.setBucketId(bucket.getBucketId());
+        fileRequest.setUserIp(userIp);
+        fileRequest.setPassword(password);
+        fileRequest.setUserOperation(Constant.OP_ACCESS);
+        fileRequest.setPath(bucket.getPath());
+
+
+        FileContext context = FileContext.builder()
+                .Files(fileList)
+                .bucketDTO(bucket)
+                .fileRequest(fileRequest)
+                .isBucket(false)
+                .build();
+        //启动责任链
+        fileChain.execute(context);
+        return RestResponce.sucess(fileList);
     }
 
 
@@ -102,6 +144,7 @@ public class FilesController {
      */
     @GetMapping("/mkdir")
     public RestResponce mkDir(@RequestParam String path) throws PathErrorException {
+        fileService.mkDir(path);
         return RestResponce.sucess();
     }
 

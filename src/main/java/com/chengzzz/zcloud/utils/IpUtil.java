@@ -33,6 +33,9 @@ public class IpUtil {
     public static boolean isWhiteIp(BucketDTO bucket, FileRequestDTO fileRequest){
         return bucket.getWhiteIpList().contains(fileRequest.getUserIp().trim());
     }
+    public static boolean isWhiteIp(String ip, List<String> whiteIpList){
+        return whiteIpList.contains(ip.trim());
+    }
 
     public static boolean removeWhiteIp(BucketDTO bucket, FileRequestDTO fileRequest){
         List<String> whiteIpList =  bucket.getWhiteIpList();

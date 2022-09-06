@@ -11,15 +11,13 @@ import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
 import com.chengzzz.zcloud.service.cacheservice.IcacheService;
 import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
+import com.chengzzz.zcloud.utils.IdGenerateUtil;
 import com.chengzzz.zcloud.utils.RedisCacheUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +32,19 @@ public class CacheServiceImpl implements IcacheService {
 
     @Resource
     private FileServiceImpl fileService;
+
+
+    public void saveOrUpdateFileByFile(FileEntityItem f){
+        redisCacheUtil.setCacheMapValue(Constant.FILES+f.getPath(), f.getPath(), f);
+    }
+    public String buildUrlKey(String path){
+        FileEntityItem fileEntityItem = new FileEntityItem();
+        fileEntityItem.setPath(path);
+        String idWork = IdGenerateUtil.IDWORK();
+        fileEntityItem.setUrl(idWork);
+        redisCacheUtil.setCacheObject(Constant.FILE_URL+idWork, fileEntityItem);
+        return idWork;
+    }
 
 
     @Override
@@ -77,5 +88,14 @@ public class CacheServiceImpl implements IcacheService {
             results.add(build);
         }
         return results;
+    }
+
+    @Override
+    public List<FileEntity> getAllFileFromCacheByPath(String path) {
+        return redisCacheUtil.getCacheList(Constant.FILES+path);
+    }
+
+    public Map getFileFromHashCacheByPath(String path) {
+        return redisCacheUtil.getCacheMap(Constant.PATH_FILES+path);
     }
 }

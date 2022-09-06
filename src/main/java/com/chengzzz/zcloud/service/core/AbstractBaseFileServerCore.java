@@ -14,5 +14,8 @@ public abstract class AbstractBaseFileServerCore implements FileServerCore {
     public abstract List<FileEntityItem> getFileList(String path);
 
     @Override
+    public abstract List<String> getFileHashKeyList(String path);
+
+    @Override
     public abstract String getUrl(String path);
 }

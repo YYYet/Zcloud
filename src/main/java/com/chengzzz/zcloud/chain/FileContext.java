@@ -32,4 +32,5 @@ public class FileContext extends ContextBase {
 
     FileRequestDTO fileRequest;
 
+    Boolean isBucket;
 }

@@ -1,11 +1,13 @@
 package com.chengzzz.zcloud.utils;
 
 import cn.hutool.core.io.FileUtil;
-import com.chengzzz.zcloud.entity.FileEntity;
 import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
+import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+
+import javax.annotation.Resource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +28,10 @@ import static com.chengzzz.zcloud.constant.Constant.PATH_ERROR;
 @Component
 public class ZcloudFilesUtil {
 
+    @Resource
+    FileServiceImpl fileService;
+
+
     /**
      * 从当前路径中获取该层中所有的文件
      * @param path
@@ -37,6 +43,7 @@ public class ZcloudFilesUtil {
             throw new PathErrorException(PATH_ERROR);
         }
         File[] ls = FileUtil.ls(path);
+//        List<File> files =  FileUtil.loopFiles(path);
         List<File> files = Arrays.asList(ls);
         return FileFormatUtil.file2FileEntityItem(files);
     }
@@ -48,9 +55,10 @@ public class ZcloudFilesUtil {
      * @return
      */
     public  List<FileEntityItem> searchFiles(String name, String path){
-        List<File> files = FileUtil.loopFiles(path);
-        List<File> collect = files.stream().filter(item -> item.getName().contains(name)).distinct().collect(Collectors.toList());
-        return FileFormatUtil.file2FileEntityItem(collect);
+//        List<File> files = FileUtil.loopFiles(path);
+        List<FileEntityItem> fileList = fileService.getFileList(path);
+        List<FileEntityItem> collect = fileList.stream().filter(item -> item.getName().contains(name)).distinct().collect(Collectors.toList());
+        return collect;
     }
 
     /**

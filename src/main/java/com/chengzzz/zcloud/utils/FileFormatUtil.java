@@ -1,5 +1,6 @@
 package com.chengzzz.zcloud.utils;
 
+import cn.hutool.core.date.DateUtil;
 import com.chengzzz.zcloud.entity.FileEntity;
 import com.chengzzz.zcloud.entity.FileEntityItem;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +31,7 @@ public class FileFormatUtil {
         FileEntityItem fileEntity = new FileEntityItem();
         BeanUtils.copyProperties(item, fileEntity);
         fileEntity.setNeedHidden(false);
+        fileEntity.setLastModifyDate(DateUtil.date(item.lastModified()).toString());
         /**
          * 极度影响性能
          */

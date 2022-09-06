@@ -57,6 +57,26 @@ CREATE TABLE "UserFilePermission" (
                                       CONSTRAINT "fileid" UNIQUE ("id" COLLATE BINARY ASC)
 );
 
+-- ----------------------------
+-- Table structure for CommomConfig
+-- ----------------------------
+DROP TABLE IF EXISTS "CommomConfig";
+CREATE TABLE "CommomConfig" (
+                                "id" INTEGER NOT NULL,
+                                "config_name" TEXT,
+                                "config_value" TEXT,
+                                PRIMARY KEY ("id")
+);
+
+-- ----------------------------
+-- Indexes structure for table CommomConfig
+-- ----------------------------
+CREATE UNIQUE INDEX "config_name_unique"
+    ON "CommomConfig" (
+                       "config_name" COLLATE BINARY ASC
+        );
+
+
 
 PRAGMA foreign_keys = true;
 

@@ -13,6 +13,8 @@ public interface FileServerCore {
 
     List<FileEntityItem> getFileList(String path);
 
+    List<String> getFileHashKeyList(String path);
+
     String getUrl(String path);
 
 }
