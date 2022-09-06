@@ -27,6 +27,8 @@ public class Constant {
     public static String CONFIG = "config:";
 
     public static String FILE_CONFIG = "fileConfig:";
+
+    public static String FILE_URL = "url:";
     public static String BUCKET = "bucket:";
 
     public static String FILES = "files:";

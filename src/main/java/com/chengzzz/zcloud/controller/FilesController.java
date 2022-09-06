@@ -6,6 +6,7 @@ import com.chengzzz.zcloud.chain.FileChain;
 import com.chengzzz.zcloud.chain.FileContext;
 import com.chengzzz.zcloud.constant.Constant;
 import com.chengzzz.zcloud.dto.BucketDTO;
+import com.chengzzz.zcloud.dto.BuildUrlReqDTO;
 import com.chengzzz.zcloud.dto.FileRequestDTO;
 import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
@@ -13,6 +14,7 @@ import com.chengzzz.zcloud.exception.PathErrorException;
 import com.chengzzz.zcloud.responce.RestResponce;
 import com.chengzzz.zcloud.service.cacheservice.impl.CacheServiceImpl;
 import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
+import com.chengzzz.zcloud.utils.IdGenerateUtil;
 import com.chengzzz.zcloud.utils.IpUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,16 @@ public class FilesController {
     FileServiceImpl fileService;
 
     /**
+     * 生成url
+     * @param BuildUrlReqDTO 路径
+     * @return RestResponce
+     */
+    @PostMapping("/buildUrl")
+    public RestResponce buildUrl(@RequestBody BuildUrlReqDTO buildUrlReqDTO){
+        return RestResponce.sucess(cacheService.buildUrlKey(buildUrlReqDTO.getPath()));
+    }
+
+    /**
      * 获取路径下第一层文件及文件夹
      * @param bucketId
      * @return
@@ -82,6 +94,7 @@ public class FilesController {
                 .Files(fileEntityItemList)
                 .bucketDTO(bucket)
                 .fileRequest(fileRequest)
+                .isBucket(false)
                 .build();
         //启动责任链
         fileChain.execute(context);
@@ -131,6 +144,7 @@ public class FilesController {
      */
     @GetMapping("/mkdir")
     public RestResponce mkDir(@RequestParam String path) throws PathErrorException {
+        fileService.mkDir(path);
         return RestResponce.sucess();
     }
 

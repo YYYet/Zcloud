@@ -62,16 +62,16 @@ public class ZcloudApplication {
     @PostConstruct
     public void init(){
         clearBaseCache();
-        contextLoads();
+//        contextLoads();
         redisCacheUtil.setCacheObject(Constant.DEFAULT_USER_NAME, zcloudInitConfig.getDefaultAdminUsername());
         redisCacheUtil.setCacheObject(Constant.DEFAULT_USER_PASSWORD, zcloudInitConfig.getDefaultAdminPassword());
         redisCacheUtil.setCacheList(Constant.GLOBAL_OTHER_ADMIN, globalConfig.getOtherAdmin());
 
-        try {
-            initConfigFromCache();
-        }catch (Exception e){
-            System.out.println(e);
-        }
+//        try {
+//            initConfigFromCache();
+//        }catch (Exception e){
+//            System.out.println(e);
+//        }
 
 //        initFiles2Cache();
 

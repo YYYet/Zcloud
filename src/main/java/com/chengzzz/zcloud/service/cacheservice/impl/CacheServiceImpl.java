@@ -11,6 +11,7 @@ import com.chengzzz.zcloud.entity.FileEntityItem;
 import com.chengzzz.zcloud.exception.PathErrorException;
 import com.chengzzz.zcloud.service.cacheservice.IcacheService;
 import com.chengzzz.zcloud.service.fileservice.impl.FileServiceImpl;
+import com.chengzzz.zcloud.utils.IdGenerateUtil;
 import com.chengzzz.zcloud.utils.RedisCacheUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -31,6 +32,19 @@ public class CacheServiceImpl implements IcacheService {
 
     @Resource
     private FileServiceImpl fileService;
+
+
+    public void saveOrUpdateFileByFile(FileEntityItem f){
+        redisCacheUtil.setCacheMapValue(Constant.FILES+f.getPath(), f.getPath(), f);
+    }
+    public String buildUrlKey(String path){
+        FileEntityItem fileEntityItem = new FileEntityItem();
+        fileEntityItem.setPath(path);
+        String idWork = IdGenerateUtil.IDWORK();
+        fileEntityItem.setUrl(idWork);
+        redisCacheUtil.setCacheObject(Constant.FILE_URL+idWork, fileEntityItem);
+        return idWork;
+    }
 
 
     @Override

@@ -23,9 +23,12 @@ public class FileEntityItem {
     private String path;
     private String url;
     private Integer Order;
+    private long downLoadCount;
     private Boolean NeedHidden;
     private String size;
     private String password = "";
+    private String lastModifyDate;
+    private String suffix;
     private List<String> whiteIpList;
     private boolean isDirectory;
     private boolean exists;
