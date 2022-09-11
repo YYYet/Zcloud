@@ -60,8 +60,8 @@ CREATE TABLE "UserFilePermission" (
 -- ----------------------------
 -- Table structure for CommomConfig
 -- ----------------------------
-DROP TABLE IF EXISTS "CommomConfig";
-CREATE TABLE "CommomConfig" (
+DROP TABLE IF EXISTS "CommonConfig";
+CREATE TABLE "CommonConfig" (
                                 "id" INTEGER NOT NULL,
                                 "config_name" TEXT,
                                 "config_value" TEXT,
@@ -72,7 +72,7 @@ CREATE TABLE "CommomConfig" (
 -- Indexes structure for table CommomConfig
 -- ----------------------------
 CREATE UNIQUE INDEX "config_name_unique"
-    ON "CommomConfig" (
+    ON "CommonConfig" (
                        "config_name" COLLATE BINARY ASC
         );
 

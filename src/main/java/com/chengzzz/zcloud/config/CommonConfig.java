@@ -1,5 +1,6 @@
 package com.chengzzz.zcloud.config;
 import lombok.Data;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 

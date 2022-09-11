@@ -16,6 +16,7 @@ import com.chengzzz.zcloud.utils.RedisCacheUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
@@ -28,9 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@SpringBootApplication
+
 @Slf4j
 @EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
+@SpringBootApplication(exclude = {FlywayAutoConfiguration.class})
 public class ZcloudApplication {
     @Resource
     ZcloudInitConfig zcloudInitConfig;
@@ -154,14 +156,7 @@ public class ZcloudApplication {
         }
     }
 
-    /**
-     * 配置类反推
-     * @param key
-     * @param value
-     * @param entity
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
-     */
+
 //    public static void initConfigData(String key, String value, CommonConfig entity) throws NoSuchFieldException, IllegalAccessException {
 //        LambdaQueryWrapper<ConfigDo> lambdaQueryWrapper = Wrappers.<ConfigDo>lambdaQuery().eq(ConfigDo::getConfigName, key);
 //        long count = commonConfigServer.count(lambdaQueryWrapper);

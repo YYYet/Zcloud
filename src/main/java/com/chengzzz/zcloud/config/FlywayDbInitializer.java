@@ -3,6 +3,7 @@ package com.chengzzz.zcloud.config;
 import cn.hutool.core.util.StrUtil;
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;

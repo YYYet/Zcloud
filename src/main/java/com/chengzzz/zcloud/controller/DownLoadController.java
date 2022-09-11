@@ -74,37 +74,4 @@ public class DownLoadController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(new InputStreamResource(file.getInputStream()));
     }
-
-//    @GetMapping
-//    public void downloadFile(String filePath, HttpServletResponse response)
-//            throws IOException {
-//
-//        Assert.isTrue(StringUtils.isNotEmpty(filePath), "路径为空");
-//
-//        if (redisCacheUtil.hasKey(Constant.FILE_URL+filePath)){
-//            log.info("分享链接下载");
-//            FileEntityItem fileEntityItem = redisCacheUtil.getCacheObject(Constant.FILE_URL+filePath);
-//            filePath = fileEntityItem.getPath();
-//            fileEntityItem.setDownLoadCount(fileEntityItem.getDownLoadCount()+1);
-//            fileEntityItem.setUrl(filePath);
-//            cacheService.saveOrUpdateFileByFile(fileEntityItem);
-//        }
-//
-//        log.info("进入下载方法 路径{}", filePath);
-//        // 读到流中
-//        InputStream inputStream = new FileInputStream(filePath);// 文件的存放路径
-//        response.reset();
-//        response.setContentType("application/octet-stream");
-//        String filename = FileUtil.file(filePath).getName();
-//        response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
-//        ServletOutputStream outputStream = response.getOutputStream();
-//        byte[] b = new byte[1024];
-//        int len;
-//        //从输入流中读取一定数量的字节，并将其存储在缓冲区字节数组中，读到末尾返回-1
-//        while ((len = inputStream.read(b)) > 0) {
-//            outputStream.write(b, 0, len);
-//        }
-//        inputStream.close();
-//
-//    }
 }
