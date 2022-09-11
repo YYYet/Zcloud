@@ -17,13 +17,13 @@ spring:
   datasource:
     #引用项目中的数据库文件
     driver-class-name: org.sqlite.JDBC
-    url: jdbc:sqlite::resource:static/sqlite/test.db
+    url: jdbc:sqlite::resource:static/sqlite/zcloud.db
     username: root
     password: root
 
   flyway:
-    enabled: true
-    clean-disabled: true
+    enabled: false
+    clean-disabled: false
 
 
   redis:

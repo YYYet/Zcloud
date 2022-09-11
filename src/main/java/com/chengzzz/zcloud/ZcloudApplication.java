@@ -30,9 +30,9 @@ import java.util.List;
 import java.util.Map;
 
 
+@SpringBootApplication
 @Slf4j
 @EnableAspectJAutoProxy(exposeProxy = true, proxyTargetClass = true)
-@SpringBootApplication(exclude = {FlywayAutoConfiguration.class})
 public class ZcloudApplication {
     @Resource
     ZcloudInitConfig zcloudInitConfig;
@@ -68,15 +68,6 @@ public class ZcloudApplication {
         redisCacheUtil.setCacheObject(Constant.DEFAULT_USER_NAME, zcloudInitConfig.getDefaultAdminUsername());
         redisCacheUtil.setCacheObject(Constant.DEFAULT_USER_PASSWORD, zcloudInitConfig.getDefaultAdminPassword());
         redisCacheUtil.setCacheList(Constant.GLOBAL_OTHER_ADMIN, globalConfig.getOtherAdmin());
-
-//        try {
-//            initConfigFromCache();
-//        }catch (Exception e){
-//            System.out.println(e);
-//        }
-
-//        initFiles2Cache();
-
     }
 
 
@@ -103,49 +94,6 @@ public class ZcloudApplication {
         redisCacheUtil.deleteObject(Constant.GLOBAL_OTHER_ADMIN);
     }
 
-//    public static void initConfig() throws IllegalAccessException {
-//        Field[] fields = null;
-//        try {
-//            fields = CommonConfig.class.getFields();
-//        }catch (Exception e){
-//            System.out.println(e);
-//        }
-//
-//        if (fields == null){
-//            return;
-//        }
-//        CommonConfig commonConfigEntity = new CommonConfig();
-//        for (Field field : fields) {
-//            System.out.println("这是当前类的属性 "+field.getName());
-//            System.out.println("这是当前类的值 "+field.get(commonConfigEntity));
-//            try {
-//                initConfigData(field.getName(), field.get(commonConfigEntity).toString(), commonConfigEntity);
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//        }
-//
-//    }
-    public  void initConfigFromCache() throws IllegalAccessException {
-        Field[] fields = null;
-        try {
-            fields = CommonConfig.class.getFields();
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-        if (fields == null){
-            return;
-        }
-        CommonConfig commonConfigEntity = new CommonConfig();
-        for (Field field : fields) {
-            try {
-                initConfigDataByCache(field.getName(), field.get(commonConfigEntity).toString(), commonConfigEntity);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
 
     public  void initConfigDataByCache(String key, String value, CommonConfig entity) throws NoSuchFieldException, IllegalAccessException {
         if (!redisCacheUtil.hasKey(Constant.CONFIG + key)){
@@ -157,20 +105,6 @@ public class ZcloudApplication {
     }
 
 
-//    public static void initConfigData(String key, String value, CommonConfig entity) throws NoSuchFieldException, IllegalAccessException {
-//        LambdaQueryWrapper<ConfigDo> lambdaQueryWrapper = Wrappers.<ConfigDo>lambdaQuery().eq(ConfigDo::getConfigName, key);
-//        long count = commonConfigServer.count(lambdaQueryWrapper);
-//        if (count == 0){
-//            ConfigDo configDo = new ConfigDo();
-//            configDo.setConfigName(key);
-//            configDo.setConfigValue(value);
-//            commonConfigServer.save(configDo);
-//        }else {
-//            Field f = CommonConfig.class.getDeclaredField(key);
-//            ConfigDo c = commonConfigServer.getOne(lambdaQueryWrapper);
-//            f.set(entity, c.getConfigValue());
-//        }
-//    }
    public void initFiles2Cache(){
        log.info("正在缓存文件");
       try {

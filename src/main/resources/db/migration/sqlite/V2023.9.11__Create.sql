@@ -1,18 +1,3 @@
-/*
- Navicat Premium Data Transfer
-
- Source Server         : Zcloud
- Source Server Type    : SQLite
- Source Server Version : 3030001
- Source Schema         : main
-
- Target Server Type    : SQLite
- Target Server Version : 3030001
- File Encoding         : 65001
-
- Date: 28/08/2022 11:59:35
-*/
-
 PRAGMA foreign_keys = false;
 
 
@@ -82,3 +67,4 @@ PRAGMA foreign_keys = true;
 
 
 INSERT INTO "main"."User"("id", "username", "password", "type", "deleted") VALUES (1563729771781799937, 'admin', 'admin', 'admin', 0);
+INSERT INTO "main"."User"("id", "username", "password", "type", "deleted") VALUES (1563729771781799932, 'admin2', 'admin2', 'admin2', 0);
